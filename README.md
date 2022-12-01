@@ -8,3 +8,8 @@ Here are some possible solutions that have been implemented:
  - [ ] Something that is a combination of the first two options
 
 I have tried using quarto's lightbox plugin, and it does not play nice when used within a DT. It works fine outside of a DT though.
+
+### Create interactive report
+```bash
+quarto render datatable_images.qmd
+```

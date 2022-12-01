@@ -8,6 +8,7 @@ params:
   output_directory: "output"
 format:
   html:
+    self-contained: true
     code-fold: true
     code-overflow: scroll
     code-line-numbers: true
@@ -98,3 +99,4 @@ datatable(
     ),
 )
 ```
+
