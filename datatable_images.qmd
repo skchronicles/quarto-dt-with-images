@@ -1,0 +1,100 @@
+---
+title: "SV Report"
+subtitle: "Chromoseq"
+author: "NCBR"
+date: "`r Sys.Date()`"
+params:
+  input_file: "data/tiny.tsv"
+  output_directory: "output"
+format:
+  html:
+    code-fold: true
+    code-overflow: scroll
+    code-line-numbers: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: true
+    number-depth: 3
+    toc_float:
+      collapsed: false
+# Requires quarto plugin: lightbox
+# https://www.github.com/quarto-ext/lightbox
+# NOTE: lightbox does not work within a datatable,
+# bootstrap modals do not work either
+# Install via:
+#   quarto install extension quarto-ext/lightbox
+# filters:
+#   - lightbox
+# lightbox:
+#  match: auto
+---
+
+```{r setup, include=FALSE}
+# Set the working directory
+suppressMessages(library("knitr"))
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = params$wdir)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+# Predicted Structural Variation  
+```{r data_table_results}
+# Load required R packages 
+# Install via CRAN: 
+#   install.packages('packageName')
+suppressMessages(library("DT"))
+
+# Reading predicted SV results
+results = read.table(
+    file = params$input_file,  # 'test.tsv'
+    sep = '\t',
+    header = TRUE, 
+    row.names = 1, 
+    quote = ""
+)
+
+# Get filename without extension 
+# for DT export as .CSV or .XLSX 
+download_basename <- sub(
+    pattern = "(.*)\\..*$", 
+    replacement = "\\1", 
+    basename(params$input_file)
+)
+
+# Create interactive data 
+# table with the results 
+datatable(
+    results,
+    rownames = FALSE, # hide rownames
+    escape = FALSE,   # allow embedding of html for image
+    filter = "bottom",   # allows filtering on each column
+    extensions = c(
+      "Buttons",      # add download buttons
+      "Scroller",     # for scrolling instead of pagination
+      "FixedColumns"  # freeze columns in datatable
+    ),
+    style = "auto",
+    width = "100%",
+    options = list(
+      dom = "Blrtip",  # specify content (search box, etc)
+      deferRender = TRUE,
+      scrollX = TRUE,
+      # fixedColumns = list(leftColumns = 1), # freeze right two columns
+      scrollY = 400,
+      scroller = TRUE,
+      buttons = list(
+        list(
+            extend= "csv",  # download as .csv
+            filename=download_basename,
+            exportOptions=list(columns = c(0, 1))
+        ),
+        list(
+            extend="excel", # download as .xlsx
+            filename=download_basename,
+            exportOptions=list(columns = c(0, 1))
+        )
+      )
+    ),
+)
+```
