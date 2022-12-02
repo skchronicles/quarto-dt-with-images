@@ -84,7 +84,7 @@ def convert2base64(file):
     # Browsers cannot handle base64
     # converted PDFs
     ext = file.split('.')[-1]
-    assert ext.lower() != 'PDF'
+    assert ext.lower() != 'pdf'
     
     # Covert the image into base64
     binary_file = open(file, 'rb').read() 
