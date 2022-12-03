@@ -166,11 +166,11 @@ if __name__ == '__main__':
                 # BND has one plot,
                 # had ALT position in filename
                 # example: BND_chr11_49953211_chrX_10410866.png
-                # grab position from............ A[chrX:22453669[G
-                achrom = alt.split(':')[0]                  # A[chrX
+                # grab position from.......................... A[chrX:22453669[G
+                achrom = alt.split(':')[0]                    # A[chrX
                 achrom = achrom.split('[')[-1].split(']')[-1] # chrX
-                alt = alt.split(':')[-1]              # 22453669[G
-                alt = alt.split('[')[0].split(']')[0] # 22453669
+                alt = alt.split(':')[-1]                      # 22453669[G
+                alt = alt.split('[')[0].split(']')[0]         # 22453669
                 plots.append(
                     os.path.join(
                         'samplot',
