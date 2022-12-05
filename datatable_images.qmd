@@ -4,18 +4,20 @@ subtitle: "Chromoseq"
 author: "NCBR"
 date: "`r Sys.Date()`"
 params:
-  input_file: "data/tiny.tsv"
+  input_file: "data/input.example.tsv"
   output_directory: "output"
 format:
   html:
+    page-layout: full
     self-contained: true
+    code-tools: true
     code-fold: true
     code-overflow: scroll
     code-line-numbers: true
-    toc: true
+    toc: false
     toc-depth: 3
     toc-location: body
-    number-sections: true
+    number-sections: false
     number-depth: 3
     toc_float:
       collapsed: false
@@ -67,36 +69,45 @@ download_basename <- sub(
 # table with the results 
 datatable(
     results,
-    rownames = FALSE, # hide rownames
-    escape = FALSE,   # allow embedding of html for image
-    filter = "bottom",   # allows filtering on each column
+    rownames = FALSE,    # hide rownames
+    escape = FALSE,      # allow embedding of html for image
+    # filter = "bottom", # allows filtering on each column
     extensions = c(
-      "Buttons",      # add download buttons
-      "Scroller",     # for scrolling instead of pagination
-      "FixedColumns"  # freeze columns in datatable
+      "Buttons",       # add download buttons
+      "Scroller",      # for scrolling instead of pagination
+      "SearchBuilder"  # create complex search queries
     ),
     style = "auto",
     width = "100%",
     options = list(
-      dom = "Blrtip",  # specify content (search box, etc)
+      dom = "QBlrtip",  # specify content (search box, etc)
       deferRender = TRUE,
       scrollX = TRUE,
-      # fixedColumns = list(leftColumns = 1), # freeze right two columns
-      scrollY = 400,
+      scrollY = 800,
       scroller = TRUE,
       buttons = list(
         list(
-            extend= "csv",  # download as .csv
-            filename=download_basename,
-            exportOptions=list(columns = c(0, 1))
+          extend="csv",   # download as .csv
+          filename=download_basename,
+          exportOptions=list(columns = c(0, 1))
         ),
         list(
-            extend="excel", # download as .xlsx
-            filename=download_basename,
-            exportOptions=list(columns = c(0, 1))
+          extend="excel",  # download as .xlsx
+          filename=download_basename,
+          exportOptions=list(columns = c(0, 1))
+        ),
+        list(
+          extend="colvisGroup", # condensed table
+          text="Compact View",
+          show=c(0:5,length(colnames(results))-1),
+          hide=c(6:length(colnames(results))-2)
+        ),
+        list(
+          extend="colvisGroup",  # entire table
+          text="Full View",
+          show=c(0:length(colnames(results))-1)
         )
       )
     ),
 )
 ```
-
