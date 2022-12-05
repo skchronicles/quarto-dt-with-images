@@ -10,7 +10,7 @@ Usage:
     ./link_figures.py sample.chromoseq.tsv > sample.chromoseq.images.tsv
 """
 
-button_template = '<a class="btn btn-primary" href="__uri__" role="button">View</a>'
+button_template = '<a class="btn btn-primary" href="__uri__" target="_blank" role="button">View</a>'
 
 
 def err(*message, **kwargs):
