@@ -12,5 +12,5 @@ I have tried using quarto's lightbox plugin, and it does not play nice when used
 ### Create interactive report
 ```bash
 ./src/link_figures.py data/sample.chromoseq.tsv > data/input.example.tsv
-quarto render datatable_images.qmd
+quarto render datatable_images.qmd -o sample.chromoseq.html -P input_file:data/input.example.tsv
 ```

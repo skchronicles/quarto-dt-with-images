@@ -3,13 +3,14 @@ title: "SV Report"
 subtitle: "Chromoseq"
 author: "NCBR"
 date: "`r Sys.Date()`"
+theme: "cosmo"
 params:
   input_file: "data/input.example.tsv"
-  output_directory: "output"
 format:
   html:
     page-layout: full
     self-contained: true
+    embed-resources: true
     code-tools: true
     code-fold: true
     code-overflow: scroll
@@ -37,7 +38,6 @@ format:
 # Set the working directory
 suppressMessages(library("knitr"))
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(root.dir = params$wdir)
 knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 ```
 
