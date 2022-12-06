@@ -46,4 +46,4 @@ NR08_S1
         └── INV_chr6_24804833_34375955.png
 ```
 
-If you want to send someone the results/report, please create a ZIP file or tarball of the entire directory.
+> _**Please note**_: If you want to send someone the results/report, please create a ZIP file or tarball of the entire directory!
