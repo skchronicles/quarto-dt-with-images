@@ -6,6 +6,7 @@ date: "`r Sys.Date()`"
 theme: "cosmo"
 params:
   input_file: "data/input.example.tsv"
+  genome_plot: "figs/sample.genomePlot.png"
 format:
   html:
     page-layout: full
@@ -22,16 +23,6 @@ format:
     number-depth: 3
     toc_float:
       collapsed: false
-# Requires quarto plugin: lightbox
-# https://www.github.com/quarto-ext/lightbox
-# NOTE: lightbox does not work within a datatable,
-# bootstrap modals do not work either
-# Install via:
-#   quarto install extension quarto-ext/lightbox
-# filters:
-#   - lightbox
-# lightbox:
-#  match: auto
 ---
 
 ```{r setup, include=FALSE}
@@ -42,6 +33,9 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
 # Predicted Structural Variation  
+<!--Per sample genome-wide plot-->
+![](`r params$genome_plot`){width=100% fig-align="center"} 
+
 ```{r data_table_results}
 # Load required R packages 
 # Install via CRAN: 
@@ -73,9 +67,9 @@ datatable(
     escape = FALSE,      # allow embedding of html for image
     # filter = "bottom", # allows filtering on each column
     extensions = c(
-      "Buttons",       # add download buttons
-      "Scroller",      # for scrolling instead of pagination
-      "SearchBuilder"  # create complex search queries
+      "Buttons",         # add download buttons
+      "Scroller",        # for scrolling instead of pagination
+      "SearchBuilder"    # create complex search queries
     ),
     style = "auto",
     width = "100%",
@@ -89,21 +83,21 @@ datatable(
         list(
           extend="csv",   # download as .csv
           filename=download_basename,
-          exportOptions=list(columns = c(0, 1))
+          exportOptions=list(columns = ':gt(0)')
         ),
         list(
           extend="excel",  # download as .xlsx
           filename=download_basename,
-          exportOptions=list(columns = c(0, 1))
+          exportOptions=list(columns = ':gt(0)')
         ),
         list(
-          extend="colvisGroup", # condensed table
+          extend="colvisGroup", # View compact table
           text="Compact View",
-          show=c(0:5,length(colnames(results))-1),
-          hide=c(6:length(colnames(results))-2)
+          show=c(0:14,31,length(colnames(results))-1),
+          hide=c(15:30,32,33,34:length(colnames(results))-2)
         ),
         list(
-          extend="colvisGroup",  # entire table
+          extend="colvisGroup",  # View entire table
           text="Full View",
           show=c(0:length(colnames(results))-1)
         )

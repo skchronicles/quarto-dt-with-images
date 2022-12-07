@@ -2,7 +2,6 @@
 
 # Python standard library
 from __future__ import print_function
-from multiprocessing.sharedctypes import Value
 import os, sys, base64
 
 _help = """link_figures.py: Adds HTML links to local images in SV report.
@@ -10,7 +9,7 @@ Usage:
     ./link_figures.py sample.chromoseq.tsv > sample.chromoseq.images.tsv
 """
 
-button_template = '<a class="btn btn-primary" href="__uri__" target="_blank" role="button">View</a>'
+button_template = '<a class="btn btn-primary" href="__uri__" target="_blank" role="button">__type__</a>'
 
 
 def err(*message, **kwargs):
@@ -118,9 +117,9 @@ if __name__ == '__main__':
         )
         # Add new columns for local
         # paths to images and HTML
-        # buttons to local images 
+        # buttons to local images
+        new_header.insert(1, 'View')
         new_header.append('Local')
-        new_header.append('Images')
         print('\t'.join(new_header)) 
 
         for line in fh:
@@ -203,10 +202,14 @@ if __name__ == '__main__':
             # were not created
             plots = [plt for plt in plots if os.path.exists(plt)]
             # Create bootstrap buttons that
-            # act as links to local plots 
-            html  = [button_template.replace('__uri__', plt) for plt in plots]
+            # act as links to local plots
+            html  = [
+                button_template.replace('__uri__', plt).replace('__type__', 'CN plot')
+                    if 'plotting' in plt else button_template.replace('__uri__', plt).replace('__type__', 'SV plot')
+                for plt in plots
+            ]
             # Add plots and HTML button to
             # the existing SV results
+            linelist.insert(1, ' '.join(html))
             linelist.append(' '.join(plots))
-            linelist.append(' '.join(html))
             print('\t'.join(linelist))
