@@ -17,7 +17,13 @@ I have tried using quarto's lightbox plugin, and it does not play nice when used
 ./src/link_figures.py data/sample.chromoseq.tsv > data/input.example.tsv
 # Render Report with links
 # to local figures for SV  
-quarto render datatable_images.qmd -o sample.chromoseq.html -P input_file:data/input.example.tsv -M title:"Sample SV Report"
+Rscript render.R \
+    -m datatable_images.qmd \
+    -i data/input.example.tsv \
+    -o output \
+    -f sample.chromoseq.html \
+    -t "Sample SV Report" \
+    -g figs/sample.genomePlot.png
 ```
 
 Images are not embedded in HTML due to file size constraints. As so, the resulting HTML file expects images to be in their respective `plotting` and `samplot` folders relative to the HTML report. 
