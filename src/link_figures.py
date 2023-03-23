@@ -4,9 +4,70 @@
 from __future__ import print_function
 import os, sys, base64
 
-_help = """link_figures.py: Adds HTML links to local images in SV report.
-Usage:
-    ./link_figures.py sample.chromoseq.tsv > sample.chromoseq.images.tsv
+_help = """link_figures.py: Adds buttons/relative links to local images.
+@Usage: 
+    ./link_figures.py \\
+        sample.chromoseq.tsv \\
+        images_root_directory \\
+    > sample.chromoseq.images.tsv
+
+Add a new columns called "View" and "Local" to the sample's chromoseq 
+report. The View column contains buttons to view each annotation variant 
+in the report. If a variant does not have an image, then there will be 
+no button for viewing. At the current moment, this script has handlers 
+to link local images in the image_root_directory for the following 
+types/classes of variants:
+ - BND
+ - DEL
+ - DUP
+ - INV
+
+Handlers for more variant types/classes can be added by request. 
+
+@Required Positional Arguments:
+    [1]  Sample Chromoseq report, type: file.
+    [2]  Relative or absolute path to the images directory, type: path.
+         The image_root_directory is the directory containing both the 
+         "samplot" and "plotting" directories.
+
+@Example images_root_directory struture:
+"/path/sample/results/" is an example images_root_directory. As you can 
+see below, it is the base directory which contains both the "plotting" and 
+"samplot" 
+folders.
+
+/path/sample/results/
+    ├── sample.chromoseq.tsv
+    ├── plotting
+    │   ├── DEL_chr17_142355_15155141.png
+    │   ├── DEL_chr7_102457574_152407149.png
+    │   ├── DEL_chr7_152408466_159331838.png
+    │   ├── DEL_chr9_203751_20385694.png
+    │   ├── DEL_chr9_68417082_92137939.png
+    │   ├── DUP_chr3_126806258_162793355.png
+    │   ├── DUP_chr3_162908546_198118671.png
+    │   ├── DUP_chr8_212369_43936239.png
+    │   ├── DUP_chr8_45971871_145072660.png
+    │   └── NR08_S1.genomePlot.png
+    └── samplot
+        ├── BND_chr11_118484498_chr9_20385759.png
+        ├── BND_chr1_116377720_chr21_42725018.png
+        ├── BND_chr11_49953211_chrX_10410866.png
+        ├── BND_chr1_22102933_chrX_22453669.png
+        ├── DEL_chr17_142355_15155141.png
+        ├── DEL_chr7_102457574_152407149.png
+        ├── DUP_chr3_126806258_162793355.png
+        ├── DUP_chr8_45971871_145072660.png
+        ├── INV_chr13_26759066_30519315.png
+        ├── INV_chr13_30132829_33488254.png
+        └── INV_chr6_24804833_34375955.png
+
+@Example command:
+Given this directory structure and an here is an example command:
+    $ ./link_figures.py \\
+          /path/sample/results/sample.chromoseq.tsv \\
+          /path/sample/results/ \\
+        > /path/sample/results/sample.chromoseq.linked.tsv
 """
 
 button_template = '<a class="btn btn-primary" href="__uri__" target="_blank" role="button">__type__</a>'
@@ -101,6 +162,7 @@ if __name__ == '__main__':
     # Input chromseq SV results
     try:
         input_file = sys.argv[1]
+        image_base = sys.argv[2]
     except IndexError:
         # No input file provided
         fatal(_help)
@@ -199,8 +261,10 @@ if __name__ == '__main__':
             
             # Check if plot exists and 
             # filter out any plots that 
-            # were not created
-            plots = [plt for plt in plots if os.path.exists(plt)]
+            # were not created, maybe 
+            # add a warning later if a
+            # local image is not found
+            plots = [plt for plt in plots if os.path.exists(os.path.join(image_base,plt))]
             # Create bootstrap buttons that
             # act as links to local plots
             html  = [
