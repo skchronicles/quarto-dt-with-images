@@ -29,7 +29,7 @@ this_is_the_way <- function(fp, type) {
     # Given a file or directory, it will convert a relative
     # path into an absolute path.
     # @param fp <chr>: file or path to convert
-    # @param type <enum {"file"|"dir">: fp's type, either file or dir
+    # @param type <enum {"file"|"dir"}>: fp's type, either file or dir
     # @return abspath <chr>: Absolute path of file/directory
     abspath <- fp
     if (type == "directory" || type == "dir") {
