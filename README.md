@@ -1,5 +1,9 @@
 # quarto-dt-with-images
 
+<img width="1040" alt="image" src="https://user-images.githubusercontent.com/18038345/227644659-c4314a3b-12d7-40a9-97af-f813d28c4a19.png">
+
+
+
 This is a proof of concept to bundle images within an R datatable. Images can be bundled within a DT in R; however, the image's container will take up the entire row's space. This means that the height of the row will be the height of the image. This is obviously not desirable. An example interactive report can be found [here](https://www.sudosight.com/quarto-dt-with-images/). 
 
 Here are some possible solutions that have been implemented:
