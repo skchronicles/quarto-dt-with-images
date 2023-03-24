@@ -12,18 +12,54 @@ I have tried using quarto's lightbox plugin, and it does not play nice when used
 ### Create interactive report
 
 ```bash
-# Add figure information 
-# to chromoseq output file
-./src/link_figures.py data/sample.chromoseq.tsv > data/input.example.tsv
-# Render Report with links
-# to local figures for SV  
+# Step 0. Load dependencies:
+# python3 (>=3.5), quarto-cli, 
+# R/4.X, R-quarto, R-rmarkdown,
+# R-DT, R-argparse, R-knitr
+module load R/4.2.2
+export R_LIBS_USER=/data/OpenOmics/dev/R/%v/library
+export PATH="/data/OpenOmics/dev/quarto-1.2.475/bin:$PATH"
+
+# Step 1. Add figure information 
+# to chromoseq output file, links
+# each SV event to its local image
+./src/link_figures.py \
+  data/sample.chromoseq.tsv \
+  data/ \
+> data/input.example.tsv
+
+# Step 2. Render Report with links
+# to local figures for each SV in 
+# a searchable, interactive datatable   
 Rscript render.R \
     -m datatable_images.qmd \
     -i data/input.example.tsv \
-    -o output \
+    -o data/ \
     -f sample.chromoseq.html \
-    -t "Sample SV Report" \
-    -g figs/sample.genomePlot.png
+    -t "Example Sample SV Report" \
+    -g data/plotting/sample.genomePlot.png
+
+# The resulting HTML file will be in
+# folder specified by the -o option.
+# The HTML file uses relative links
+# to images, as so, it is important 
+# maintain the file structure defined
+# below. To send the resulting report,
+# you will need to create a tarball of
+# the html report and its images. You 
+# to this with the following command.
+files=$(
+  awk -F '\t' '{print $NF}' data/input.example.tsv \
+    | sed '/^$/d' \
+    | tail -n+2 \
+    | tr '\n' ' ' \
+    | tr -d '\n'
+)
+tar -zcf sample_chromoseq_report.tar.gz \
+  input.example.tsv \
+  sample.chromoseq.html \
+  $files \
+  -C data/
 ```
 
 Images are not embedded in HTML due to file size constraints. As so, the resulting HTML file expects images to be in their respective `plotting` and `samplot` folders relative to the HTML report. 
